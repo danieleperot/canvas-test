@@ -6,6 +6,8 @@ export default class Game {
     this.mapWidth = options.mapWidth || 16
     this.tilesSize = options.tilesSize || 64
     this.tilesDrawSize = options.tilesDrawSize || 64
+    this.scale = 1
+    canvas.addEventListener('click', (event) => this.clickHandler(event))
   }
 
   async loadTiles() {
@@ -53,6 +55,14 @@ export default class Game {
         yPos * this.tilesDrawSize
       )
 
+      this.canvas.strokeStyle = 'black'
+      this.canvas.strokeRect(
+        xPos * this.tilesDrawSize,
+        yPos * this.tilesDrawSize,
+        this.tilesDrawSize,
+        this.tilesDrawSize
+      )
+
       xPos++
     }
   }
@@ -60,8 +70,6 @@ export default class Game {
   drawTiles() {
     let xPos = 0
     let yPos = 0
-
-    console.log(this.tiles)
 
     for (let i = 0; i < this.tiles.length; i++) {
       if (xPos >= this.mapWidth) {
@@ -77,6 +85,73 @@ export default class Game {
 
       xPos++
     }
+  }
+
+  bestCanvasDimensions() {
+    const rows =
+      this.map.length % this.mapWidth
+        ? (this.map.length / this.mapWidth).toFixed(0) + 1
+        : this.map.length / this.mapWidth
+
+    return {
+      width: this.mapWidth * this.tilesDrawSize,
+      height: rows * this.tilesDrawSize
+    }
+  }
+
+  zoom(scale) {
+    this.clear()
+    this.canvas.scale(scale, scale)
+    this.drawMap()
+  }
+
+  clear() {
+    this.canvas.clearRect(
+      0,
+      0,
+      this.canvas.canvas.width,
+      this.canvas.canvas.height
+    )
+  }
+
+  resetZoom() {
+    this.canvas.setTransform(1, 0, 0, 1, 0, 0)
+    this.drawMap()
+  }
+
+  resetAll() {
+    this.clear()
+    this.canvas.setTransform(1, 0, 0, 1, 0, 0)
+    this.drawMap()
+  }
+
+  isometric() {
+    this.isIsometric = true
+    this.canvas.setTransform(1, 0, 0, 1, 0, 0)
+    this.clear()
+    this.canvas.translate(4 * 32, 1)
+    this.canvas.scale(1, 0.45)
+    this.canvas.rotate(Math.PI / 4)
+    this.drawMap()
+  }
+
+  clickHandler(event) {
+    this.drawMap()
+    const rectangle = event.target.getBoundingClientRect()
+    const xPos = Math.floor(
+      (event.clientX - rectangle.left) / this.tilesDrawSize
+    )
+    const yPos = Math.floor(
+      (event.clientY - rectangle.top) / this.tilesDrawSize
+    )
+
+    this.canvas.strokeStyle = 'red'
+    this.canvas.strokeRect(
+      xPos * this.tilesDrawSize,
+      yPos * this.tilesDrawSize,
+      this.tilesDrawSize,
+      this.tilesDrawSize
+    )
   }
 
   _loadImage(path) {
