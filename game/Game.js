@@ -10,8 +10,14 @@ export default class Game {
     canvas.addEventListener('click', (event) => this.clickHandler(event))
   }
 
+  async loadManualTiles(img) {
+    this.tilesImage = img
+    await this.loadTiles()
+  }
+
   async loadTiles() {
-    this.tiles = []
+    if (!this.tiles) this.tiles = []
+
     const tilesSource = await this._loadImage(this.tilesImage)
     let yPos = 0
     let xPos = 0
@@ -99,6 +105,17 @@ export default class Game {
     }
   }
 
+  bestTilesDimensions() {
+    return {
+      width: this.mapWidth * this.tilesDrawSize,
+      height:
+        this.tilesDrawSize *
+        (this.tiles.length % this.mapWidth
+          ? Math.floor(this.tiles.length / this.mapWidth) + 1
+          : this.tiles.length / this.mapWidth)
+    }
+  }
+
   zoom(scale) {
     this.clear()
     this.canvas.scale(scale, scale)
@@ -170,6 +187,8 @@ export default class Game {
 
   async _extractTile(source, x, y, width, height) {
     const extractCanvas = document.createElement('canvas')
+    extractCanvas.height = height
+    extractCanvas.width = width
     const extractCtx = extractCanvas.getContext('2d')
 
     extractCtx.drawImage(source, x, y, width, height, 0, 0, width, height)
