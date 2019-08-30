@@ -53,6 +53,13 @@
             </button>
           </div>
         </controls-section>
+        <controls-section title="Altre pagine">
+          <div class="btn-wrapper w-full flex items-center justify-center mb-2">
+            <button class="mx-4 px-4 py-2 rounded-lg border-2 bg-blue-300">
+              <nuxt-link to="/tiles">Tiles list</nuxt-link>
+            </button>
+          </div>
+        </controls-section>
       </template>
     </dashboard>
   </div>
