@@ -1,91 +1,60 @@
 <template>
-  <div class="game-wrapper">
-    <div class="canvas-wrapper relative" :class="{ 'is-loading': loadingMap }">
-      <canvas
-        id="main"
-        ref="canvas"
-        class="game-map mx-auto"
-        :width="canvasWidth"
-        :height="canvasHeight"
-      />
-      <div v-if="loadingMap" class="loader">Sto caricando la mappa...</div>
-    </div>
-    <div class="controls">
+  <div class="main-page">
+    <dashboard>
       <div
-        class="controls__buttons flex w-full justify-center items-center my-4"
+        class="canvas-wrapper relative h-full"
+        :class="{ 'is-loading': loadingMap }"
       >
-        <button
-          class="mx-4 px-4 py-2 rounded-lg border-2 bg-blue-300"
-          @click="updateMap()"
-        >
-          Aggiorna mappa
-        </button>
-        <button
-          class="mx-4 px-4 py-2 rounded-lg border-2"
-          :class="{ 'bg-green-300': !isIsometric, 'bg-grey-300': isIsometric }"
-          @click="changeToIso()"
-        >
-          Passa a isometrica
-        </button>
-        <button
-          class="mx-4 px-4 py-2 rounded-lg border-2"
-          :class="{ 'bg-green-300': isIsometric, 'bg-grey-300': !isIsometric }"
-          @click="changeTo2D()"
-        >
-          Passa a 2D
-        </button>
-        <button
-          class="mx-4 px-4 py-2 rounded-lg border-2 bg-yellow-300"
-          @click="zoom(1 / scale)"
-        >
-          Zoom -
-        </button>
-        <button
-          class="mx-4 px-4 py-2 rounded-lg border-2 bg-yellow-300"
-          @click="zoom(scale)"
-        >
-          Zoom +
-        </button>
+        <canvas
+          id="main"
+          ref="canvas"
+          class="game-map mx-auto"
+          :width="canvasWidth"
+          :height="canvasHeight"
+        />
+        <div v-if="loadingMap" class="loader">Sto caricando la mappa...</div>
       </div>
-      <div
-        class="controls__sliders flex w-full justify-center items-center my-4"
-      >
-        <div>
-          <b class="mx-4"> Asse X ({{ rotateX }}) </b>
-          <input
-            v-model="rotateX"
-            type="range"
-            min="1"
-            max="100"
-            class="slider"
-          />
-        </div>
-        <div>
-          <b class="mx-4"> Asse Y ({{ rotateY }}) </b>
-          <input
-            v-model="rotateY"
-            type="range"
-            min="1"
-            max="100"
-            class="slider"
-          />
-        </div>
-        <div>
-          <b class="mx-4"> Asse Z ({{ rotateZ }}) </b>
-          <input
-            v-model="rotateZ"
-            type="range"
-            min="1"
-            max="100"
-            class="slider"
-          />
-        </div>
-        <div>
-          <b class="mx-4"> Fattore di zoom ({{ scale }}) </b>
-          <input type="range" min="0.1" max="10" step="0.1" class="slider" />
-        </div>
-      </div>
-    </div>
+      <template #controls>
+        <controls-section title="Controlli principali">
+          <div class="btn-wrapper w-full flex items-center justify-center mb-2">
+            <button
+              class="mx-4 px-4 py-2 rounded-lg border-2 bg-blue-300"
+              @click="updateMap()"
+            >
+              Aggiorna mappa
+            </button>
+          </div>
+          <div class="btn-wrapper w-full flex items-center justify-center">
+            <button
+              class="mx-4 px-4 py-2 rounded-lg border-2"
+              :class="{
+                'bg-green-300': !isIsometric,
+                'bg-grey-300': isIsometric
+              }"
+              @click="changeToIso()"
+            >
+              Passa a isometrica
+            </button>
+          </div>
+        </controls-section>
+        <controls-section title="Movimenti della mappa">
+          <div class="btn-wrapper w-full flex items-center justify-center">
+            <button
+              class="mx-4 px-4 py-2 rounded-lg border-2 bg-yellow-300"
+              @click="zoom(1 / scale)"
+            >
+              Zoom -
+            </button>
+            <button
+              class="mx-4 px-4 py-2 rounded-lg border-2 bg-yellow-300"
+              @click="zoom(scale)"
+            >
+              Zoom +
+            </button>
+          </div>
+        </controls-section>
+      </template>
+    </dashboard>
   </div>
 </template>
 
@@ -170,12 +139,8 @@ export default {
 }
 </script>
 
-<style>
-.canvas-wrapper {
-  min-height: 80vh;
-}
-
-.canvas-wrapper .loader {
+<style lang="scss">
+.loader {
   position: absolute;
   top: 0;
   left: 0;
@@ -191,28 +156,5 @@ export default {
   font-size: 2rem;
   color: #49aaff;
   text-shadow: 0 0 3rem rgba(0, 0, 0, 0.75);
-}
-
-.game-wrapper {
-  overflow: hidden;
-}
-
-.game-wrapper canvas {
-  overflow: hidden;
-  object-fit: none;
-  padding: 0;
-  margin: 0 auto;
-  max-height: 80vh;
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
-.controls {
-  padding-top: 0.5rem;
-  border-top: 2px solid black;
-  background: white;
-  min-height: 20vh;
-  height: 100%;
 }
 </style>
