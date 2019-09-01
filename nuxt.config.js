@@ -1,3 +1,6 @@
+const join = require('path').join
+const tailwindJS = join(__dirname, 'tailwind.config.js')
+
 export default {
   mode: 'universal',
   /*
@@ -23,7 +26,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['~/assets/css/tailwind.css'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -33,9 +36,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/eslint-module'
   ],
   /*
    ** Nuxt.js modules
@@ -53,9 +54,8 @@ export default {
    ** Build configuration
    */
   build: {
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {}
+    postcss: {
+      plugins: [require('tailwindcss')(tailwindJS), require('autoprefixer')]
+    }
   }
 }
